@@ -52,6 +52,24 @@ class UrlPairDAL {
     }
   }
 
+  async getByShortenedPath (shortenedPath) {
+    try {
+      const result = await this.rds(TABLE_NAME)
+        .select(columns.SHORTENED_PATH, columns.ORIGINAL_URL)
+        .where(columns.SHORTENED_PATH, shortenedPath)
+      if (result.length === 0) {
+        return null
+      } else {
+        return new UrlPair(
+          result[0][columns.SHORTENED_PATH],
+          result[0][columns.ORIGINAL_URL]
+        )
+      }
+    } catch (error) {
+      throw AppError.badImplementation(null, `[SQL Error] Get urlPair by shortenedPath error: ${error}`)
+    }
+  }
+
   async getUniqueShortenedPath () {
     let shortenedPath = ''
     let [retryCount, maxRetryCount] = [0, MAX_RETRY_SHORTEN_COUNT]

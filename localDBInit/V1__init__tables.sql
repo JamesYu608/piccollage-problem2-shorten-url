@@ -3,4 +3,4 @@ CREATE TABLE tbl_url_pair (
    original_url VARCHAR (512) NOT NULL,
    PRIMARY KEY (shortened_path),
    UNIQUE INDEX original_url_INDEX (original_url)
-);
+) CHARACTER SET utf8 COLLATE utf8_bin;
