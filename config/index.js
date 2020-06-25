@@ -5,7 +5,13 @@
 const { validate } = require('./schema')
 
 const config = {
-  PORT: 8080
+  PORT: 8080,
+  SERVER_ADDRESS: 'http://localhost:8080',
+  shortenConfig: {
+    SHORTENED_PATH_SPACE: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', // Base62
+    SHORTENED_PATH_LENGTH: 2,
+    MAX_RETRY_SHORTEN_COUNT: 50
+  }
 }
 
 if (!validate(config)) {
