@@ -4,7 +4,11 @@
 // But there is only one method, so I put it here
 
 const { Router } = require('express')
+const { SERVER_ADDRESS } = require('../../config')
 const requestValidator = require('../middlewares/requestValidator')
+const repositories = require('../repositories')
+const UrlPair = require('../components/urlPairs/UrlPair')
+const UrlPairDAL = require('../components/urlPairs/UrlPairDAL')
 
 // Request schema
 const createShortenSchema = {
@@ -27,8 +31,16 @@ router.post('/', requestValidator(createShortenSchema), createShorten)
 // Business logic
 async function createShorten (req, res) {
   const { originalUrl } = req.body
+  const urlPairDAL = new UrlPairDAL(repositories)
+  let urlPair = await urlPairDAL.getByOriginalUrl(originalUrl)
+  if (!urlPair) {
+    const uniqueShortenedPath = await urlPairDAL.getUniqueShortenedPath()
+    urlPair = new UrlPair(uniqueShortenedPath, originalUrl)
+    await urlPairDAL.save(urlPair)
+  }
+
   res.json({
-    shortenedUrl: 'AB'
+    shortenedUrl: `${SERVER_ADDRESS}/${urlPair.shortenedPath}`
   })
 }
 

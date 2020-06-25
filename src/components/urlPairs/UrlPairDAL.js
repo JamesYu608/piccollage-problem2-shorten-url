@@ -4,6 +4,7 @@ const {
   MAX_RETRY_SHORTEN_COUNT
 } = require('../../../config').shortenConfig
 const { NAME: TABLE_NAME, columns } = require('../../repositories/urlPairTableSchema')
+const UrlPair = require('./UrlPair')
 const AppError = require('../../utils/AppError')
 
 function getShortenedPath () {
@@ -30,6 +31,24 @@ class UrlPairDAL {
       return true
     } catch (error) {
       throw AppError.badImplementation(null, `[SQL Error] Save urlPair error: ${error}`)
+    }
+  }
+
+  async getByOriginalUrl (originalUrl) {
+    try {
+      const result = await this.rds(TABLE_NAME)
+        .select(columns.SHORTENED_PATH, columns.ORIGINAL_URL)
+        .where(columns.ORIGINAL_URL, originalUrl)
+      if (result.length === 0) {
+        return null
+      } else {
+        return new UrlPair(
+          result[0][columns.SHORTENED_PATH],
+          result[0][columns.ORIGINAL_URL]
+        )
+      }
+    } catch (error) {
+      throw AppError.badImplementation(null, `[SQL Error] Get urlPair by originalUrl error: ${error}`)
     }
   }
 
