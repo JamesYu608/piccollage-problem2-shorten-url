@@ -11,6 +11,15 @@ const config = {
     SHORTENED_PATH_SPACE: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', // Base62
     SHORTENED_PATH_LENGTH: 2,
     MAX_RETRY_SHORTEN_COUNT: 50
+  },
+  repositories: {
+    rds: {
+      CLIENT: 'mysql',
+      DATABASE: 'demo',
+      USER: 'root',
+      PASSWORD: 'docker',
+      HOST: 'localhost'
+    }
   }
 }
 

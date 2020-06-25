@@ -3,6 +3,8 @@ const {
   SHORTENED_PATH_LENGTH,
   MAX_RETRY_SHORTEN_COUNT
 } = require('../../../config').shortenConfig
+const { NAME: TABLE_NAME, columns } = require('../../repositories/urlPairTableSchema')
+const AppError = require('../../utils/AppError')
 
 function getShortenedPath () {
   let result = ''
@@ -14,18 +16,48 @@ function getShortenedPath () {
 }
 
 class UrlPairDAL {
-  constructor () {}
+  constructor (repositories) {
+    this.rds = repositories.rds
+  }
+
+  async save (urlPair) {
+    try {
+      await this.rds(TABLE_NAME)
+        .insert({
+          [columns.SHORTENED_PATH]: urlPair.shortenedPath,
+          [columns.ORIGINAL_URL]: urlPair.originalUrl
+        })
+      return true
+    } catch (error) {
+      throw AppError.badImplementation(null, `[SQL Error] Save urlPair error: ${error}`)
+    }
+  }
 
   async getUniqueShortenedPath () {
     let shortenedPath = ''
     let [retryCount, maxRetryCount] = [0, MAX_RETRY_SHORTEN_COUNT]
-    // TODO: check DB
-    // while (retryCount < maxRetryCount) {
-    //   // retryCount++
-    // }
-    // // throw error
-    shortenedPath = getShortenedPath()
-    return shortenedPath
+    while (retryCount < maxRetryCount) {
+      shortenedPath = getShortenedPath()
+      const isExist = await this.isShortenedPathExist(shortenedPath)
+      if (!isExist) {
+        return shortenedPath
+      }
+      retryCount++
+    }
+    throw AppError.badImplementation(
+      null, '[Shorten Failed] getUniqueShortenedPath failed, retry limit exceeded'
+    )
+  }
+
+  async isShortenedPathExist (shortenedPath) {
+    try {
+      const result = await this.rds(TABLE_NAME)
+        .select(columns.SHORTENED_PATH)
+        .where(columns.SHORTENED_PATH, shortenedPath)
+      return result.length !== 0
+    } catch (error) {
+      throw AppError.badImplementation(null, `[SQL Error] isShortenedPathExist error: ${error}`)
+    }
   }
 }
 
