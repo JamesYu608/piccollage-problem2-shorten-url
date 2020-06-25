@@ -1,0 +1,11 @@
+{
+  "name": "piccollage-problem2-shorten-url",
+  "version": "1.0.0",
+  "description": "This is a backend demo project for PicCollage recruitment.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jamesyu608@gmail.com",
+  "license": "ISC"
+}

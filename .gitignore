@@ -1,0 +1,16 @@
+# Created by .ignore support plugin (hsz.mobi)
+
+# IntelliJ project files
+.idea
+*.iml
+out
+
+# dotenv environment variables file
+# we don't have to ignore env files in this demo project
+# .env
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# Dependency directories
+node_modules/
