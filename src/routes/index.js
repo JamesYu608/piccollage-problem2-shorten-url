@@ -4,6 +4,8 @@ const { Router } = require('express')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const logger = require('../utils/logger')
+const shorten = require('./shorten')
+const redirect = require('./redirect')
 const appErrorHandler = require('../middlewares/appErrorHandler')
 
 const router = Router()
@@ -13,14 +15,10 @@ router.use(bodyParser.json())
 
 // basic routes
 router.get('/health', (req, res) => { res.status(200).send() })
-router.get('/', (req, res) => res.send('Hello World!'))
 
 // API routes
-router.get('/hello', (req, res) => {
-  res.json({
-    message: 'Hello, PicCollage!'
-  })
-})
+router.use('/', redirect)
+router.use('/shorten', shorten)
 
 // error handler middlewares
 router.use(appErrorHandler)
