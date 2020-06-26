@@ -9,15 +9,6 @@ const UrlPairCache = require('./UrlPairCache')
 const logger = require('../../utils/logger')
 const AppError = require('../../utils/AppError')
 
-function getShortenedPath () {
-  let result = ''
-  const charactersLength = SHORTENED_PATH_SPACE.length
-  for (let i = 0; i < SHORTENED_PATH_LENGTH; i++) {
-    result += SHORTENED_PATH_SPACE.charAt(Math.floor(Math.random() * charactersLength))
-  }
-  return result
-}
-
 class UrlPairDAL {
   constructor (repositories) {
     this.rds = repositories.rds
@@ -98,11 +89,20 @@ class UrlPairDAL {
     }
   }
 
+  static getShortenedPath () {
+    let result = ''
+    const charactersLength = SHORTENED_PATH_SPACE.length
+    for (let i = 0; i < SHORTENED_PATH_LENGTH; i++) {
+      result += SHORTENED_PATH_SPACE.charAt(Math.floor(Math.random() * charactersLength))
+    }
+    return result
+  }
+
   async getUniqueShortenedPath () {
     let shortenedPath = ''
     let [retryCount, maxRetryCount] = [0, MAX_RETRY_SHORTEN_COUNT]
     while (retryCount < maxRetryCount) {
-      shortenedPath = getShortenedPath()
+      shortenedPath = UrlPairDAL.getShortenedPath()
       const isExist = await this.isShortenedPathExist(shortenedPath)
       if (!isExist) {
         return shortenedPath
