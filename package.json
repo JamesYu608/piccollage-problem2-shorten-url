@@ -5,7 +5,21 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./index.js",
-    "test": "standard"
+    "seed": "knex seed:run",
+    "test": "standard && npm run seed && jest --config=jest.config.js --detectOpenHandles",
+    "unit": "jest --config=jest.config.unit.js --detectOpenHandles",
+    "integration": "npm run seed && jest --config=jest.config.integration.js --detectOpenHandles"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "test",
+      "expect",
+      "beforeEach",
+      "beforeAll",
+      "afterEach",
+      "afterAll"
+    ]
   },
   "author": "jamesyu608@gmail.com",
   "license": "ISC",

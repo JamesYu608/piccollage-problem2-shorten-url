@@ -21,7 +21,15 @@ const redis = new Redis({
   maxRetriesPerRequest: null
 })
 
+// for integration test
+async function shutDown () {
+  await redis.flushdb()
+  await redis.quit()
+  await rdsConnection.destroy()
+}
+
 module.exports = {
   rds: rdsConnection,
-  redis
+  redis,
+  shutDown
 }
