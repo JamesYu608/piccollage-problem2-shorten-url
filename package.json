@@ -12,6 +12,7 @@
   },
   "standard": {
     "globals": [
+      "jest",
       "describe",
       "test",
       "expect",

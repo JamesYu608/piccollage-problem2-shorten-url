@@ -29,64 +29,47 @@ class UrlPairDAL {
     }
   }
 
+  async get (column, value) {
+    try {
+      const result = await this.rds(TABLE_NAME)
+        .select(columns.SHORTENED_PATH, columns.ORIGINAL_URL)
+        .where(column, value)
+
+      if (result.length === 0) {
+        // Case 1: Doesn't exist, return null
+        return null
+      } else {
+        // Case 2: Exists, save to cache and return urlPair
+        const urlPair = new UrlPair(
+          result[0][columns.SHORTENED_PATH],
+          result[0][columns.ORIGINAL_URL]
+        )
+        await this.cache.set(urlPair)
+        return urlPair
+      }
+    } catch (error) {
+      throw AppError.badImplementation(null, `[SQL Error] Get urlPair by ${column} error: ${error}`)
+    }
+  }
+
   async getByOriginalUrl (originalUrl) {
-    // Step 1: Query cache, if exists, return cache
+    // Query cache, if exists, return cache
     const cacheUrlPair = await this.cache.getByOriginalUrl(originalUrl)
     if (cacheUrlPair) {
       return cacheUrlPair
     }
 
-    try {
-      // Step 2: Cache miss, query database
-      const result = await this.rds(TABLE_NAME)
-        .select(columns.SHORTENED_PATH, columns.ORIGINAL_URL)
-        .where(columns.ORIGINAL_URL, originalUrl)
-
-      if (result.length === 0) {
-        // Step 3-1: Doesn't exist, return null
-        return null
-      } else {
-        // Step 3-2: Exists, save to cache and return urlPair
-        const urlPair = new UrlPair(
-          result[0][columns.SHORTENED_PATH],
-          result[0][columns.ORIGINAL_URL]
-        )
-        await this.cache.set(urlPair)
-        return urlPair
-      }
-    } catch (error) {
-      throw AppError.badImplementation(null, `[SQL Error] Get urlPair by originalUrl error: ${error}`)
-    }
+    return this.get(columns.ORIGINAL_URL, originalUrl)
   }
 
   async getByShortenedPath (shortenedPath) {
-    // Step 1: Query cache, if exists, return cache
+    // Query cache, if exists, return cache
     const cacheUrlPair = await this.cache.getByShortenedPath(shortenedPath)
     if (cacheUrlPair) {
       return cacheUrlPair
     }
 
-    try {
-      // Step 2: Cache miss, query database
-      const result = await this.rds(TABLE_NAME)
-        .select(columns.SHORTENED_PATH, columns.ORIGINAL_URL)
-        .where(columns.SHORTENED_PATH, shortenedPath)
-
-      if (result.length === 0) {
-        // Step 3-1: Doesn't exist, return null
-        return null
-      } else {
-        // Step 3-2: Exists, save to cache and return urlPair
-        const urlPair = new UrlPair(
-          result[0][columns.SHORTENED_PATH],
-          result[0][columns.ORIGINAL_URL]
-        )
-        await this.cache.set(urlPair)
-        return urlPair
-      }
-    } catch (error) {
-      throw AppError.badImplementation(null, `[SQL Error] Get urlPair by shortenedPath error: ${error}`)
-    }
+    return this.get(columns.SHORTENED_PATH, shortenedPath)
   }
 
   static getShortenedPath () {
