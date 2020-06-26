@@ -3,7 +3,7 @@ const app = require('../../src')
 const { createAndSaveUrlPair } = require('../testUtil')
 
 describe('[Integration][Route][GET] /:shortenedPath', () => {
-  test('urlPair is exist, response should be 301, check database and compare with response', async () => {
+  test('urlPair exists, response should be 301, check database and compare with response', async () => {
     // Arrange
     const data = {
       shortenedPath: 'redirect_1',

@@ -34,34 +34,27 @@ class UrlPairCache {
     }
   }
 
-  async getByShortenedPath (shortenedPath) {
+  async get (key) {
     try {
-      const result = await this.cache.get(`${KEY_SHORTENED_PATH}_${shortenedPath}`)
+      const result = await this.cache.get(key)
       if (result) {
-        logger.info('[UrlPairCache] Hit! Get urlPair cache by shortenedPath')
+        logger.info('[UrlPairCache] Hit! Get urlPair by cache')
         const data = JSON.parse(result)
         return new UrlPair(data.shortenedPath, data.originalUrl)
       } else {
         return null
       }
     } catch (error) {
-      logger.warn(`[UrlPairCache Error] Get urlPair by shortenedPath error: ${error}`)
+      logger.warn(`[UrlPairCache Error] Get urlPair by cache error: ${error}, key: ${key}`)
     }
   }
 
+  async getByShortenedPath (shortenedPath) {
+    return this.get(`${KEY_SHORTENED_PATH}_${shortenedPath}`)
+  }
+
   async getByOriginalUrl (originalUrl) {
-    try {
-      const result = await this.cache.get(`${KEY_ORIGINAL_URL}_${originalUrl}`)
-      if (result) {
-        logger.info('[UrlPairCache] Hit! Get urlPair cache by originalUrl')
-        const data = JSON.parse(result)
-        return new UrlPair(data.shortenedPath, data.originalUrl)
-      } else {
-        return null
-      }
-    } catch (error) {
-      logger.warn(`[UrlPairCache Error] Get urlPair by originalUrl error: ${error}`)
-    }
+    return this.get(`${KEY_ORIGINAL_URL}_${originalUrl}`)
   }
 }
 
