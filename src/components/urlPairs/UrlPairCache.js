@@ -38,7 +38,7 @@ class UrlPairCache {
     try {
       const result = await this.cache.get(`${KEY_SHORTENED_PATH}_${shortenedPath}`)
       if (result) {
-        logger.info(`[UrlPairCache] Hit! Get urlPair cache by shortenedPath`)
+        logger.info('[UrlPairCache] Hit! Get urlPair cache by shortenedPath')
         const data = JSON.parse(result)
         return new UrlPair(data.shortenedPath, data.originalUrl)
       } else {
@@ -53,7 +53,7 @@ class UrlPairCache {
     try {
       const result = await this.cache.get(`${KEY_ORIGINAL_URL}_${originalUrl}`)
       if (result) {
-        logger.info(`[UrlPairCache] Hit! Get urlPair cache by originalUrl`)
+        logger.info('[UrlPairCache] Hit! Get urlPair cache by originalUrl')
         const data = JSON.parse(result)
         return new UrlPair(data.shortenedPath, data.originalUrl)
       } else {

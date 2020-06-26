@@ -34,7 +34,7 @@ const schema = {
       properties: {
         SHORTENED_PATH_SPACE: { type: 'string' },
         SHORTENED_PATH_LENGTH: { type: 'number' },
-        MAX_RETRY_SHORTEN_COUNT: { type: 'number' },
+        MAX_RETRY_SHORTEN_COUNT: { type: 'number' }
       },
       required: ['SHORTENED_PATH_SPACE', 'SHORTENED_PATH_LENGTH', 'MAX_RETRY_SHORTEN_COUNT']
     },
