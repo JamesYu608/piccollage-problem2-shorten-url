@@ -19,6 +19,10 @@ const config = {
       USER: 'root',
       PASSWORD: 'docker',
       HOST: 'localhost'
+    },
+    redis: {
+      HOST: 'localhost',
+      PORT: 6379
     }
   }
 }

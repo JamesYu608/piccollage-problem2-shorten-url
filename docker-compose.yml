@@ -10,3 +10,8 @@ services:
       - MYSQL_DATABASE=demo
     volumes:
       - ./localDBInit/:/docker-entrypoint-initdb.d/
+  redis:
+    container_name: myapp-redis
+    image: redis:5.0
+    ports:
+      - 6379:6379

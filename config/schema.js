@@ -15,6 +15,15 @@ const rdsSchema = {
   required: ['CLIENT', 'DATABASE', 'USER', 'PASSWORD', 'HOST']
 }
 
+const redisSchema = {
+  type: 'object',
+  properties: {
+    HOST: { type: 'string' },
+    PORT: { type: 'integer' }
+  },
+  required: ['HOST', 'PORT']
+}
+
 const schema = {
   type: 'object',
   properties: {
@@ -33,8 +42,9 @@ const schema = {
       type: 'object',
       properties: {
         rds: rdsSchema,
+        redis: redisSchema
       },
-      required: ['rds']
+      required: ['rds', 'redis']
     }
   },
   required: ['PORT', 'SERVER_ADDRESS', 'shortenConfig', 'repositories']
