@@ -4,11 +4,13 @@
 // But there is only one method, so I put it here
 
 const { Router } = require('express')
+const validUrl = require('valid-url')
 const { SERVER_ADDRESS } = require('../../config')
 const requestValidator = require('../middlewares/requestValidator')
 const repositories = require('../repositories')
 const UrlPair = require('../components/urlPairs/UrlPair')
 const UrlPairDAL = require('../components/urlPairs/UrlPairDAL')
+const AppError = require('../utils/AppError')
 
 // Request schema
 const createShortenSchema = {
@@ -17,7 +19,8 @@ const createShortenSchema = {
     properties: {
       originalUrl: {
         type: 'string',
-        example: 'https://www.google.com.tw/'
+        example: 'https://www.google.com.tw/',
+        maxLength: 512
       }
     },
     required: ['originalUrl']
@@ -31,6 +34,10 @@ router.post('/', requestValidator(createShortenSchema), createShorten)
 // Business logic
 async function createShorten (req, res) {
   const { originalUrl } = req.body
+  if (!validUrl.isWebUri(originalUrl)) {
+    throw AppError.badRequest('originalUrl is invalid!')
+  }
+
   const urlPairDAL = new UrlPairDAL(repositories)
   let urlPair = await urlPairDAL.getByOriginalUrl(originalUrl)
   if (!urlPair) {
