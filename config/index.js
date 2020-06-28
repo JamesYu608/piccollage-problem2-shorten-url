@@ -18,10 +18,10 @@ const config = {
       DATABASE: 'demo',
       USER: 'root',
       PASSWORD: 'docker',
-      HOST: 'localhost'
+      HOST: process.env.RDS_HOST || 'localhost'
     },
     redis: {
-      HOST: 'localhost',
+      HOST: process.env.REDIS_HOST || 'localhost',
       PORT: 6379
     }
   }
