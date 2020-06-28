@@ -18,7 +18,7 @@ async function redirectOriginalUrl (req, res) {
   const urlPairDAL = new UrlPairDAL(repositories)
   const urlPair = await urlPairDAL.getByShortenedPath(shortenedPath)
   if (!urlPair) {
-    throw AppError.notFound('Shorten url not found!')
+    throw AppError.notFound('Shortened url not found!')
   }
   res.redirect(301, urlPair.originalUrl)
 }
