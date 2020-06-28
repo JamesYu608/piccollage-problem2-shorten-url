@@ -1,6 +1,6 @@
 # PicCollage Assignment 2: Building Shorten URL service
 
-[Design Document]((https://bit.ly/2YrFNZr))
+[Design Document](https://bit.ly/2YrFNZr)
 
 README Outline:
 
@@ -199,7 +199,7 @@ We should see the test results in the console, and it will be like:
     ✓ urlPair does not exist, response should be 404 (12 ms)
 ```
 
-And the test report will be like:
+The test report will be like:
 
 ```bash
 -------------------------|---------|----------|---------|---------|-------------------
