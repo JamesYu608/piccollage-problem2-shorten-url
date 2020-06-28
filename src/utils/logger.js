@@ -12,6 +12,10 @@ const logger = winston.createLogger({
   ]
 })
 
+if (process.env.NODE_ENV === 'test') {
+  logger.silent = true
+}
+
 logger.infoStream = {
   write: function (message, encoding) {
     logger.info(message)
